@@ -39,7 +39,7 @@ function generateQuestion() {
 
 function displayQuestion() {
     if (testData.length > 0) {
-        const currentQuestion = testData.shift();
+        const currentQuestion = testData[0];
         document.getElementById('question').innerText = currentQuestion.question;
     }
 }
