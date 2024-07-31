@@ -99,6 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => startSection(currentSection + 1), 500);
     };
 
+    // Function to handle keyboard input
+    const handleKeyboardInput = (event) => {
+        if (event.key === '0' || event.key === '1') {
+            handleAnswer(event.key);
+        }
+    };
+
     // Function to update the timer
     const updateTimer = () => {
         const timeLeft = Math.max(0, 60 - Math.floor((Date.now() - startTime) / 1000));
