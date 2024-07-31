@@ -1,140 +1,86 @@
-document.getElementById('start-button').addEventListener('click', function() {
-    const name = document.getElementById('name').value;
-    if (name) {
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('test-screen').style.display = 'block';
-        startTest(name);
-    } else {
-        alert('Masukkan nama lengkap!');
+document.addEventListener('DOMContentLoaded', () => {
+    const startButton = document.getElementById('startButton');
+    const testScreen = document.getElementById('test-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const startScreen = document.getElementById('start-screen');
+    const fullNameInput = document.getElementById('fullName');
+    const nextSectionButton = document.getElementById('next-section');
+    const finishEarlyButton = document.getElementById('finish-early');
+    const resultsTableBody = document.querySelector('#results tbody');
+    const retryButton = document.getElementById('retryButton');
+    const segmentElement = document.getElementById('segment');
+    const timerElement = document.getElementById('timer');
+    const questionElement = document.getElementById('question');
+    const answerButtons = document.querySelectorAll('.answer-button');
+    
+    let currentSection = 0;
+    let timer;
+    let startTime;
+    const sections = [];
+    let userName = '';
+
+    // Initialize sections
+    for (let i = 0; i < 15; i++) {
+        sections.push({
+            number: i + 1,
+            correct: 0,
+            incorrect: 0,
+            total: 0
+        });
     }
-});
 
-let testData = [];
-let currentSegment = 1;
-const maxSegments = 15;
-let segmentData = {};
-let timerInterval;
-let timeLeft = 60;
+    // Function to start the test
+    const startTest = () => {
+        userName = fullNameInput.value.trim();
+        if (userName === '') return;
 
-function startTest(name) {
-    if (!segmentData[currentSegment]) {
-        segmentData[currentSegment] = { correct: 0, incorrect: 0 };
-    }
-    testData = Array.from({ length: 100 }, generateQuestion); // 100 questions per segment
-    displayQuestion();
-    startTimer();
-}
+        startScreen.style.display = 'none';
+        testScreen.style.display = 'flex';
+        resultScreen.style.display = 'none';
 
-function generateQuestion() {
-    const num1 = Math.floor(Math.random() * 10);
-    const num2 = Math.floor(Math.random() * 10);
-    const isEven = (num1 + num2) % 2 === 0;
-    return {
-        question: `${num1} + ${num2}`,
-        answer: isEven ? 0 : 1
+        startSection(currentSection);
     };
-}
 
-function displayQuestion() {
-    if (testData.length > 0) {
-        const currentQuestion = testData[0];
-        document.getElementById('question').innerText = currentQuestion.question;
-    }
-}
+    // Function to start a specific section
+    const startSection = (sectionIndex) => {
+        if (timer) clearInterval(timer);
 
-function answer(answer) {
-    const currentQuestion = testData[0];
-    if (currentQuestion) {
-        if (answer === currentQuestion.answer) {
-            segmentData[currentSegment].correct++;
-        } else {
-            segmentData[currentSegment].incorrect++;
+        currentSection = sectionIndex;
+        if (currentSection >= sections.length) {
+            showResults();
+            return;
         }
-        testData.shift();
-        if (testData.length === 0) {
-            clearInterval(timerInterval);
-            nextSegment();
-        } else {
-            displayQuestion();
-        }
-    }
-}
 
-function startTimer() {
-    timeLeft = 60;
-    document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            nextSegment();
-        }
-    }, 1000);
-}
+        segmentElement.textContent = `Bagian ${currentSection + 1}`;
+        startTime = Date.now();
+        updateTimer();
 
-function nextSegment() {
-    clearInterval(timerInterval);
+        // Generate a question
+        const num1 = Math.floor(Math.random() * 10);
+        const num2 = Math.floor(Math.random() * 10);
+        questionElement.textContent = `${num1} + ${num2} = ?`;
+        answerButtons.forEach(button => button.classList.remove('disabled'));
 
-    // Ensure the previous timer is cleared
-    timeLeft = 60;
-    document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
+        // Add event listeners for answer buttons
+        answerButtons.forEach(button => {
+            button.addEventListener('click', () => handleAnswer(button.dataset.answer));
+        });
 
-    if (currentSegment < maxSegments) {
-        currentSegment++;
-        document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
-        testData = Array.from({ length: 100 }, generateQuestion); // Restart test data for the new segment
-        displayQuestion();
-        startTimer(); // Start timer for the new segment
-    } else {
-        skipTest();
-    }
-}
+        // Add event listener for keyboard inputs
+        document.addEventListener('keydown', handleKeyboardInput);
 
-function skipTest() {
-    clearInterval(timerInterval);
-    document.getElementById('test-screen').style.display = 'none';
-    document.getElementById('result-screen').style.display = 'block';
-    showResults();
-}
+        // Set up the "Lanjut ke bagian selanjutnya" button
+        nextSectionButton.style.display = 'block';
+        nextSectionButton.onclick = () => {
+            clearInterval(timer);
+            startSection(currentSection + 1);
+        };
 
-function showResults() {
-    const results = [];
-    for (let i = 1; i <= maxSegments; i++) {
-        if (segmentData[i]) {
-            results.push({
-                segment: i,
-                correct: segmentData[i].correct,
-                incorrect: segmentData[i].incorrect,
-                accuracy: ((segmentData[i].correct / (segmentData[i].correct + segmentData[i].incorrect)) * 100).toFixed(1) + '%'
-            });
-        }
-    }
+        // Set up the "Selesaikan lebih dulu" button
+        finishEarlyButton.style.display = 'block';
+        finishEarlyButton.onclick = showResults;
+    };
 
-    let resultsTable = '';
-    results.forEach(result => {
-        resultsTable += `
-            <tr>
-                <td>Bagian ${result.segment}</td>
-                <td>${result.correct}</td>
-                <td>${result.incorrect}</td>
-                <td>${result.accuracy}</td>
-            </tr>
-        `;
-    });
-
-    document.getElementById('results').querySelector('tbody').innerHTML = resultsTable;
-    document.getElementById('name-display').innerText = `Nama: ${document.getElementById('name').value}`;
-}
-
-// Handle keyboard input
-document.addEventListener('keydown', function(event) {
-    if (document.getElementById('test-screen').style.display !== 'none') {
-        const key = event.key;
-        if (key === '0') {
-            answer(0);
-        } else if (key === '1') {
-            answer(1);
-        }
-    }
-});
+    // Function to handle answer selection
+    const handleAnswer = (answer) => {
+        const [num1, num2] = questionElement.textContent
