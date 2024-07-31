@@ -7,10 +7,12 @@ body {
     height: 100vh;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 #start-screen, #test-screen, #result-screen {
     text-align: center;
+    width: 100%;
 }
 
 #header {
@@ -19,6 +21,7 @@ body {
     align-items: center;
     width: 100%;
     padding: 10px;
+    box-sizing: border-box;
 }
 
 #timer {
@@ -77,20 +80,23 @@ button {
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #results-table {
     border-collapse: collapse;
     width: 100%;
-    max-width: 800px; /* Set max width for responsiveness */
+    max-width: 1000px; /* Increase max-width for larger screens */
     margin-top: 20px;
     overflow-x: auto; /* Allow horizontal scroll if needed */
 }
 
 #results-table th, #results-table td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 12px; /* Increase padding for better readability */
     text-align: center;
+    box-sizing: border-box;
 }
 
 #results-table th {
