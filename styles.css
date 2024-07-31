@@ -69,3 +69,7 @@ button {
 #start-button {
     margin-top: 10px;
 }
+
+#result-screen p {
+    font-size: 18px;
+}
