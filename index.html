@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,32 +7,34 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Start Screen -->
-    <div id="start-screen">
+    <div id="start-screen" class="centered">
         <h1>SIMULASI TES GANJIL GENAP STIS</h1>
-        <form>
-            <label for="name">Nama Lengkap:</label>
-            <input type="text" id="name" required>
-            <button type="button" id="start-button">Mulai Tes</button>
+        <form id="name-form">
+            <label for="full-name">Nama Lengkap:</label>
+            <input type="text" id="full-name" required>
+            <button id="start-test" type="button">Mulai Tes</button>
         </form>
     </div>
 
-    <!-- Test Screen -->
-    <div id="test-screen" style="display: none;">
-        <h2 id="segment">Bagian 1</h2>
-        <div id="timer">Sisa waktu: 60 detik</div>
-        <div id="question">Soal akan muncul di sini</div>
-        <button onclick="answer(0)">0</button>
-        <button onclick="answer(1)">1</button>
-        <button onclick="nextSegment()">Lanjut ke bagian selanjutnya</button>
-        <button onclick="skipTest()">Selesaikan lebih dulu</button>
+    <div id="test-screen" class="centered hidden">
+        <div id="test-header">
+            <span id="section-label">Bagian 1</span>
+            <span id="timer">Sisa waktu: 60 detik</span>
+        </div>
+        <div id="question-container">
+            <span id="question"></span>
+        </div>
+        <div id="answer-buttons">
+            <button class="answer-btn" data-answer="0">0</button>
+            <button class="answer-btn" data-answer="1">1</button>
+        </div>
+        <button id="next-section" class="hidden">Lanjut ke bagian selanjutnya</button>
+        <button id="finish-test" class="hidden">Selesaikan lebih dulu</button>
     </div>
 
-    <!-- Result Screen -->
-    <div id="result-screen" style="display: none;">
-        <h2>Hasil Tes</h2>
-        <div id="name-display">Nama: </div>
-        <table id="results">
+    <div id="result-screen" class="centered hidden">
+        <h1>Hasil Tes</h1>
+        <table id="result-table">
             <thead>
                 <tr>
                     <th>Bagian</th>
@@ -42,10 +44,10 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Results will be dynamically inserted here -->
+                <!-- Data akan diisi oleh JavaScript -->
             </tbody>
         </table>
-        <button onclick="location.reload()">Coba lagi</button>
+        <button id="retry-test">Coba lagi</button>
     </div>
 
     <script src="scripts.js"></script>
