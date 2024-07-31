@@ -95,8 +95,8 @@ function showResults() {
 
     for (let i = 1; i <= 15; i++) {
         labels.push(`Segmen ${i}`);
-        dataCorrect.push(correctAnswers[i]);
-        dataIncorrect.push(incorrectAnswers[i]);
+        dataCorrect.push(correctAnswers[i] || 0);
+        dataIncorrect.push(incorrectAnswers[i] || 0);
     }
 
     new Chart(ctx, {
