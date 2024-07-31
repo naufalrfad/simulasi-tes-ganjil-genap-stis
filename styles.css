@@ -77,9 +77,13 @@ button:hover {
     margin-bottom: 20px;
 }
 
+#answers {
+    margin-bottom: 20px;
+}
+
 .answer-button {
-    font-size: 1.5em;
-    padding: 10px 20px;
+    font-size: 2em;
+    padding: 20px;
     margin: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -92,6 +96,10 @@ button:hover {
     background-color: #ced4da;
 }
 
+#navigation-buttons {
+    margin-top: 20px;
+}
+
 #result-screen {
     background-color: #fff;
     padding: 20px;
@@ -100,7 +108,7 @@ button:hover {
 }
 
 #results {
-    width: 90%;
+    width: 80%;
     max-width: 800px;
     border-collapse: collapse;
     margin: 20px auto;
