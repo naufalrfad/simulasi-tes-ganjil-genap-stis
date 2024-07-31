@@ -7,42 +7,45 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div id="intro">
-            <h1>SIMULASI TES GANJIL GENAP STIS</h1>
-            <input type="text" id="name" placeholder="Nama Lengkap">
-            <button id="start">Mulai Tes</button>
-        </div>
-
-        <div id="test-section" class="hidden">
-            <div id="timer">Sisa waktu: 60 detik</div>
-            <div id="segment-title">Bagian 1</div>
-            <div id="question"></div>
-            <div class="options">
-                <button class="option" data-value="0">0</button>
-                <button class="option" data-value="1">1</button>
-            </div>
-            <button id="skip" class="red-button">Selesaikan Sekarang</button>
-            <button id="next" class="yellow-button">Lanjut ke Bagian Berikutnya</button>
-        </div>
-
-        <div id="result-section" class="hidden">
-            <h2>Hasil Tes</h2>
-            <p>Nama: <span id="result-name"></span></p>
-            <table id="result-table">
-                <thead>
-                    <tr>
-                        <th>Bagian</th>
-                        <th>Benar</th>
-                        <th>Salah</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <button id="retry">Coba Lagi</button>
-        </div>
+    <div id="start-screen" class="centered">
+        <h1>SIMULASI TES GANJIL GENAP STIS</h1>
+        <label for="full-name">Nama Lengkap:</label>
+        <input type="text" id="full-name" placeholder="Masukkan nama lengkap">
+        <button id="start-test">Mulai Tes</button>
     </div>
 
-    <script src="script.js"></script>
+    <div id="test-screen" class="centered hidden">
+        <div id="timer">Sisa waktu: 60 detik</div>
+        <div id="question-container">
+            <p id="question"></p>
+            <div id="answers">
+                <button class="answer" data-answer="0">0</button>
+                <button class="answer" data-answer="1">1</button>
+            </div>
+        </div>
+        <button id="next-section">Lanjut ke bagian selanjutnya</button>
+        <button id="skip-test">Selesaikan lebih dulu</button>
+        <p id="warning" class="hidden">Peringatan: jangan klik sebelum ada instruksi</p>
+    </div>
+
+    <div id="result-screen" class="centered hidden">
+        <h1>Hasil Tes</h1>
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th>Bagian</th>
+                    <th>Benar</th>
+                    <th>Salah</th>
+                    <th>Akurasi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data akan diisi dengan JavaScript -->
+            </tbody>
+        </table>
+        <button id="retry-test">Coba lagi</button>
+    </div>
+
+    <script src="scripts.js"></script>
 </body>
 </html>
