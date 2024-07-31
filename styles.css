@@ -55,9 +55,8 @@ button {
 }
 
 #skip-button {
-    position: absolute;
-    bottom: 40px;
-    right: 10px;
+    position: relative;
+    margin-top: 20px;
 }
 
 #warning {
@@ -72,4 +71,9 @@ button {
 
 #result-screen p {
     font-size: 18px;
+    margin: 5px 0;
+}
+
+#result-screen hr {
+    margin: 10px 0;
 }
