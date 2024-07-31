@@ -1,140 +1,91 @@
 document.getElementById('start-button').addEventListener('click', startTest);
-document.getElementById('retry-button').addEventListener('click', restartTest);
+document.getElementById('retry-button').addEventListener('click', retryTest);
 
-const options = document.querySelectorAll('.option-button');
-options.forEach(option => {
-    option.addEventListener('click', (e) => {
-        checkAnswer(e.target.getAttribute('data-value'));
-    });
-});
-
-let timer;
-let timeLeft;
 let currentSegment = 0;
-let questionIndex = 0;
-let questions = [];
-let correctAnswers = 0;
-let incorrectAnswers = 0;
-let results = [];
+let currentQuestion = 0;
+let correctAnswers = [];
+let totalQuestions = 15 * 100;
+let timer;
+let timeRemaining = 60;
 
 function startTest() {
     const name = document.getElementById('name').value;
     if (!name) {
-        alert('Silakan isi nama lengkap!');
+        alert('Masukkan nama lengkap!');
         return;
     }
-    
-    document.getElementById('start-screen').classList.add('hidden');
-    document.getElementById('test-screen').classList.remove('hidden');
-    document.getElementById('result-name').innerText = name;
-    
-    currentSegment = 0;
-    correctAnswers = 0;
-    incorrectAnswers = 0;
-    results = [];
-    nextSegment();
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('test-screen').style.display = 'flex';
+    startSegment();
 }
 
-function nextSegment() {
-    if (currentSegment > 0) {
-        results.push({ segment: currentSegment, correct: correctAnswers, incorrect: incorrectAnswers });
-    }
-    
-    if (currentSegment >= 15) {
-        endTest();
-        return;
-    }
-    
-    currentSegment++;
-    questionIndex = 0;
-    correctAnswers = 0;
-    incorrectAnswers = 0;
-    
-    document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
-    generateQuestions();
-    startTimer();
-    showNextQuestion();
+function startSegment() {
+    timeRemaining = 60;
+    currentQuestion = 0;
+    correctAnswers[currentSegment] = 0;
+    document.getElementById('segment').innerText = `Bagian ${currentSegment + 1}`;
+    updateTimer();
+    nextQuestion();
+    timer = setInterval(updateTimer, 1000);
 }
 
-function startTimer() {
-    timeLeft = 60;
-    document.getElementById('timer').innerText = timeLeft;
-    
-    timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timer').innerText = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            nextSegment();
+function updateTimer() {
+    timeRemaining--;
+    document.getElementById('timer').innerText = `0:${timeRemaining < 10 ? '0' : ''}${timeRemaining}`;
+    if (timeRemaining <= 0) {
+        clearInterval(timer);
+        currentSegment++;
+        if (currentSegment < 15) {
+            startSegment();
+        } else {
+            showResult();
         }
-    }, 1000);
-}
-
-function generateQuestions() {
-    questions = [];
-    for (let i = 0; i < 100; i++) {
-        const num1 = Math.floor(Math.random() * 10);
-        const num2 = Math.floor(Math.random() * 10);
-        const sum = num1 + num2;
-        questions.push({ num1, num2, sum });
     }
 }
 
-function showNextQuestion() {
-    if (questionIndex >= questions.length) {
-        nextSegment();
-        return;
-    }
-    
-    const question = questions[questionIndex];
-    document.getElementById('question').innerText = `${question.num1} + ${question.num2}`;
+function nextQuestion() {
+    if (currentQuestion >= 100) return;
+    const num1 = Math.floor(Math.random() * 10);
+    const num2 = Math.floor(Math.random() * 10);
+    const sum = num1 + num2;
+    const isEven = sum % 2 === 0 ? '0' : '1';
+    document.getElementById('question').innerText = `${num1} + ${num2} = ?`;
+
+    document.querySelectorAll('.answer-button').forEach(button => {
+        button.onclick = () => {
+            if (button.dataset.answer === isEven) {
+                correctAnswers[currentSegment]++;
+            }
+            currentQuestion++;
+            if (currentQuestion < 100) {
+                nextQuestion();
+            }
+        };
+    });
 }
 
-function checkAnswer(answer) {
-    const question = questions[questionIndex];
-    const correctAnswer = question.sum % 2 === 0 ? '0' : '1';
-    
-    if (answer === correctAnswer) {
-        correctAnswers++;
-    } else {
-        incorrectAnswers++;
-    }
-    
-    questionIndex++;
-    showNextQuestion();
-}
+function showResult() {
+    document.getElementById('test-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'flex';
 
-function endTest() {
-    clearInterval(timer);
-    document.getElementById('test-screen').classList.add('hidden');
-    document.getElementById('result-screen').classList.remove('hidden');
-    
-    results.push({ segment: currentSegment, correct: correctAnswers, incorrect: incorrectAnswers });
-    renderChart();
-}
-
-function renderChart() {
     const ctx = document.getElementById('result-chart').getContext('2d');
-    const labels = results.map(result => `Bagian ${result.segment}`);
-    const correctData = results.map(result => result.correct);
-    const incorrectData = results.map(result => result.incorrect);
-    
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Benar',
-                    backgroundColor: 'blue',
-                    data: correctData,
-                },
-                {
-                    label: 'Salah',
-                    backgroundColor: 'red',
-                    data: incorrectData,
-                }
-            ]
+            labels: Array.from({ length: 15 }, (_, i) => `Bagian ${i + 1}`),
+            datasets: [{
+                label: 'Jumlah Benar',
+                data: correctAnswers,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Jumlah Salah',
+                data: correctAnswers.map(c => 100 - c),
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
         },
         options: {
             scales: {
@@ -146,7 +97,9 @@ function renderChart() {
     });
 }
 
-function restartTest() {
-    document.getElementById('result-screen').classList.add('hidden');
-    document.getElementById('start-screen').classList.remove('hidden');
+function retryTest() {
+    currentSegment = 0;
+    correctAnswers = [];
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('start-screen').style.display = 'flex';
 }
