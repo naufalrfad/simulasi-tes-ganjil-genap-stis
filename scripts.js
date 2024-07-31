@@ -5,11 +5,9 @@ let incorrectAnswers = [];
 let timer;
 let name;
 
-// Menunggu DOM selesai dimuat
 document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById('start-button').addEventListener('click', startTest);
     document.getElementById('retry-button').addEventListener('click', retry);
-    document.getElementById('finish-button').addEventListener('click', finishTest);
 
     document.addEventListener('keydown', (event) => {
         if (document.getElementById('test-screen').style.display === 'block') {
@@ -87,9 +85,14 @@ function answer(userAnswer) {
     }
 }
 
-function finishTest() {
+function skipTest() {
     clearInterval(timer);
-    showResults();
+    currentSegment++;
+    if (currentSegment > 15) {
+        showResults();
+    } else {
+        startSegment();
+    }
 }
 
 function showResults() {
