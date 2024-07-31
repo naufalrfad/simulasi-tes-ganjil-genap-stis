@@ -19,6 +19,8 @@ function startTest() {
 
 function startSegment() {
     currentQuestion = 0;
+    correctAnswers[currentSegment] = 0;
+    incorrectAnswers[currentSegment] = 0;
     generateQuestion();
     document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
     document.getElementById('timer').innerText = 60;
@@ -51,9 +53,9 @@ function generateQuestion() {
 function answer(userAnswer) {
     const correctAnswer = parseInt(document.getElementById('question').dataset.answer);
     if (userAnswer === correctAnswer) {
-        correctAnswers.push(currentSegment);
+        correctAnswers[currentSegment]++;
     } else {
-        incorrectAnswers.push(currentSegment);
+        incorrectAnswers[currentSegment]++;
     }
 
     currentQuestion++;
@@ -74,28 +76,29 @@ function showResults() {
     document.getElementById('test-screen').style.display = 'none';
     document.getElementById('result-screen').style.display = 'block';
     const ctx = document.getElementById('resultChart').getContext('2d');
-    const results = [];
+    const labels = [];
+    const dataCorrect = [];
+    const dataIncorrect = [];
+
     for (let i = 1; i <= 15; i++) {
-        results.push({
-            segment: i,
-            correct: correctAnswers.filter(seg => seg === i).length,
-            incorrect: incorrectAnswers.filter(seg => seg === i).length
-        });
+        labels.push(`Segmen ${i}`);
+        dataCorrect.push(correctAnswers[i]);
+        dataIncorrect.push(incorrectAnswers[i]);
     }
 
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: results.map(r => `Segmen ${r.segment}`),
+            labels: labels,
             datasets: [
                 {
                     label: 'Benar',
-                    data: results.map(r => r.correct),
+                    data: dataCorrect,
                     backgroundColor: 'blue'
                 },
                 {
                     label: 'Salah',
-                    data: results.map(r => r.incorrect),
+                    data: dataIncorrect,
                     backgroundColor: 'red'
                 }
             ]
@@ -113,4 +116,15 @@ function showResults() {
 function retry() {
     currentSegment = 1;
     correctAnswers = [];
-    incorrectAnswer
+    incorrectAnswers = [];
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('start-screen').style.display = 'block';
+}
+
+document.addEventListener('keydown', (event) => {
+    if (document.getElementById('test-screen').style.display === 'block') {
+        if (event.key === '0' || event.key === '1') {
+            answer(parseInt(event.key));
+        }
+    }
+});
