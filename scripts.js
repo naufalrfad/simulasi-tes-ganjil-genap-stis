@@ -59,10 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const num1 = Math.floor(Math.random() * 10);
         const num2 = Math.floor(Math.random() * 10);
         questionElement.textContent = `${num1} + ${num2} = ?`;
-        answerButtons.forEach(button => button.classList.remove('disabled'));
 
-        // Add event listeners for answer buttons
+        // Reset and enable answer buttons
         answerButtons.forEach(button => {
+            button.classList.remove('disabled');
             button.addEventListener('click', () => handleAnswer(button.dataset.answer));
         });
 
@@ -83,4 +83,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to handle answer selection
     const handleAnswer = (answer) => {
-        const [num1, num2] = questionElement.textContent
+        const [num1, num2] = questionElement.textContent.split(' + ').map(Number);
+        const correctAnswer = (num1 + num2) % 2;
+        const isCorrect = (answer == correctAnswer);
+
+        if (isCorrect) {
+            sections[currentSection].correct++;
+        } else {
+            sections[currentSection].incorrect++;
+        }
+        sections[currentSection].total++;
+
+        if (timer) clearInterval(timer);
+        document.querySelectorAll('.answer-button').forEach(button => button.classList.add('disabled'));
+        setTimeout(() => startSection(currentSection + 1), 500);
+    };
+
+    // Function to handle keyboard input
+    const handleKeyboardInput
