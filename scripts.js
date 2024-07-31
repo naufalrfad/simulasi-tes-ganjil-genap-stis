@@ -1,125 +1,117 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const sections = 15;
-    let currentSection = 1;
+    const startButton = document.getElementById('start');
+    const testSection = document.getElementById('test-section');
+    const introSection = document.getElementById('intro');
+    const resultSection = document.getElementById('result-section');
+    const nameInput = document.getElementById('name');
+    const timerDisplay = document.getElementById('timer');
+    const questionDisplay = document.getElementById('question');
+    const segmentTitle = document.getElementById('segment-title');
+    const options = document.querySelectorAll('.option');
+    const skipButton = document.getElementById('skip');
+    const nextButton = document.getElementById('next');
+    const retryButton = document.getElementById('retry');
+    const resultNameDisplay = document.getElementById('result-name');
+    const resultTableBody = document.querySelector('#result-table tbody');
+
+    let currentSegment = 1;
     let timer;
-    let score = Array(sections).fill({correct: 0, incorrect: 0});
-    const questionsPerSection = 100;
-    let questionIndex = 0;
-    
-    const startButton = document.getElementById('start-test');
-    const testScreen = document.getElementById('test-screen');
-    const startScreen = document.getElementById('start-screen');
-    const resultScreen = document.getElementById('result-screen');
-    const nextButton = document.getElementById('next-section');
-    const skipButton = document.getElementById('skip-section');
-    const resultTableBody = document.getElementById('result-body');
-    const retryButton = document.getElementById('retry-test');
-    const timerDisplay = document.getElementById('time-left');
-    const sectionNumberDisplay = document.getElementById('section-number');
-    const resultName = document.getElementById('result-name');
-    const questionContainer = document.getElementById('question-container');
-    const questionText = document.getElementById('question');
-    
-    startButton.addEventListener('click', () => {
-        startScreen.style.display = 'none';
-        testScreen.style.display = 'block';
-        startSection(currentSection);
-    });
-    
-    nextButton.addEventListener('click', () => {
-        nextSection();
-    });
-    
-    skipButton.addEventListener('click', () => {
-        finishTest();
-    });
-    
-    retryButton.addEventListener('click', () => {
-        location.reload();
-    });
-    
-    function startSection(section) {
-        questionIndex = 0;
-        sectionNumberDisplay.textContent = section;
-        startTimer();
-        loadQuestion();
+    let questionsAnswered = 0;
+    let correctAnswers = 0;
+    let results = [];
+
+    function startTest() {
+        introSection.classList.add('hidden');
+        testSection.classList.remove('hidden');
+        startSegment();
     }
-    
+
+    function startSegment() {
+        segmentTitle.textContent = `Bagian ${currentSegment}`;
+        questionsAnswered = 0;
+        correctAnswers = 0;
+        startTimer();
+        generateQuestion();
+    }
+
     function startTimer() {
         let timeLeft = 60;
-        timerDisplay.textContent = timeLeft;
+        timerDisplay.textContent = `Sisa waktu: ${timeLeft} detik`;
         timer = setInterval(() => {
-            timeLeft -= 1;
-            timerDisplay.textContent = timeLeft;
+            timeLeft--;
+            timerDisplay.textContent = `Sisa waktu: ${timeLeft} detik`;
             if (timeLeft <= 0) {
                 clearInterval(timer);
-                nextSection();
+                endSegment();
             }
         }, 1000);
     }
-    
-    function loadQuestion() {
-        if (questionIndex >= questionsPerSection) {
-            nextSection();
-            return;
-        }
-        const num1 = Math.floor(Math.random() * 9) + 1;
-        const num2 = Math.floor(Math.random() * 9) + 1;
-        questionText.textContent = `${num1} + ${num2} = ?`;
-        
-        questionContainer.querySelectorAll('.answer-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                handleAnswer(btn.dataset.answer);
-            });
+
+    function generateQuestion() {
+        const num1 = Math.floor(Math.random() * 10);
+        const num2 = Math.floor(Math.random() * 10);
+        const answer = (num1 + num2) % 2 === 0 ? 0 : 1;
+        questionDisplay.textContent = `${num1} + ${num2} = ?`;
+
+        options.forEach(option => {
+            option.onclick = () => {
+                checkAnswer(parseInt(option.getAttribute('data-value')), answer);
+            };
         });
-        
+
         document.addEventListener('keydown', (e) => {
             if (e.key === '0' || e.key === '1') {
-                handleAnswer(e.key);
+                checkAnswer(parseInt(e.key), answer);
             }
         });
     }
-    
-    function handleAnswer(answer) {
-        const num1 = parseInt(questionText.textContent.split(' ')[0]);
-        const num2 = parseInt(questionText.textContent.split(' ')[2]);
-        const correctAnswer = (num1 + num2) % 2 === 0 ? '0' : '1';
-        if (answer === correctAnswer) {
-            score[currentSection - 1].correct += 1;
-        } else {
-            score[currentSection - 1].incorrect += 1;
+
+    function checkAnswer(selectedAnswer, correctAnswer) {
+        if (selectedAnswer === correctAnswer) {
+            correctAnswers++;
         }
-        questionIndex += 1;
-        loadQuestion();
+        questionsAnswered++;
+        generateQuestion();
     }
-    
-    function nextSection() {
-        clearInterval(timer);
-        if (currentSection < sections) {
-            currentSection += 1;
-            startSection(currentSection);
+
+    function endSegment() {
+        results.push({ segment: currentSegment, correct: correctAnswers, total: questionsAnswered });
+        if (currentSegment < 15) {
+            currentSegment++;
+            testSection.classList.add('hidden');
+            nextButton.onclick = () => {
+                testSection.classList.remove('hidden');
+                startSegment();
+            };
         } else {
-            finishTest();
+            showResults();
         }
     }
-    
-    function finishTest() {
-        testScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
-        resultName.textContent = document.getElementById('full-name').value;
-        displayResults();
-    }
-    
-    function displayResults() {
-        resultTableBody.innerHTML = '';
-        score.forEach((section, index) => {
+
+    function showResults() {
+        resultNameDisplay.textContent = nameInput.value;
+        results.forEach(result => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${section.correct}</td>
-                <td>${section.incorrect}</td>
+                <td>${result.segment}</td>
+                <td>${result.correct}</td>
+                <td>${result.total - result.correct}</td>
             `;
             resultTableBody.appendChild(row);
         });
+        testSection.classList.add('hidden');
+        resultSection.classList.remove('hidden');
     }
+
+    function retryTest() {
+        resultSection.classList.add('hidden');
+        introSection.classList.remove('hidden');
+        nameInput.value = '';
+        currentSegment = 1;
+        results = [];
+    }
+
+    startButton.addEventListener('click', startTest);
+    skipButton.addEventListener('click', showResults);
+    retryButton.addEventListener('click', retryTest);
 });
