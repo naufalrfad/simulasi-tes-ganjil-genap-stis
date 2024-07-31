@@ -69,33 +69,32 @@ button {
 
 #start-button {
     margin-top: 10px;
-    display: block; /* Ensure button is below the name input */
+    display: block;
 }
 
 #result-screen {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 20px;
 }
 
 #results-table {
     border-collapse: collapse;
-    width: 80%;
+    width: 100%;
+    max-width: 800px; /* Set max width for responsiveness */
     margin-top: 20px;
+    overflow-x: auto; /* Allow horizontal scroll if needed */
 }
 
 #results-table th, #results-table td {
     border: 1px solid #ddd;
     padding: 8px;
+    text-align: center;
 }
 
 #results-table th {
     background-color: #f2f2f2;
-    text-align: center;
-}
-
-#results-table td {
-    text-align: center;
 }
 
 #retry-button {
