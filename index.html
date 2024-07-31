@@ -15,11 +15,17 @@
     </div>
 
     <div id="test-screen" style="display: none;">
-        <div id="timer">60</div>
-        <div id="segment">Bagian 1</div>
-        <div id="question"></div>
-        <button onclick="answer(0)">0</button>
-        <button onclick="answer(1)">1</button>
+        <div id="header">
+            <div id="timer">60</div>
+            <div id="segment">Bagian 1</div>
+        </div>
+        <div id="question-container">
+            <div id="question"></div>
+        </div>
+        <div id="answers">
+            <button onclick="answer(0)">0</button>
+            <button onclick="answer(1)">1</button>
+        </div>
     </div>
 
     <div id="result-screen" style="display: none;">
