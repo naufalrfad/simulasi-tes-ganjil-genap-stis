@@ -13,6 +13,7 @@ body {
 #start-screen, #test-screen, #result-screen {
     text-align: center;
     width: 100%;
+    max-width: 1200px; /* Ensure a maximum width for readability */
 }
 
 #header {
@@ -84,17 +85,21 @@ button {
     box-sizing: border-box;
 }
 
+#results-container {
+    width: 100%;
+    max-width: 1000px; /* Limit width for the container */
+    overflow-x: auto; /* Allow horizontal scrolling if necessary */
+}
+
 #results-table {
     border-collapse: collapse;
     width: 100%;
-    max-width: 1000px; /* Increase max-width for larger screens */
     margin-top: 20px;
-    overflow-x: auto; /* Allow horizontal scroll if needed */
 }
 
 #results-table th, #results-table td {
     border: 1px solid #ddd;
-    padding: 12px; /* Increase padding for better readability */
+    padding: 12px;
     text-align: center;
     box-sizing: border-box;
 }
