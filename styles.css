@@ -1,59 +1,107 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-}
-
-.screen {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: 100vh;
-}
-
-header {
-    margin-bottom: 20px;
-}
-
-input, button {
-    margin: 10px;
-    padding: 10px;
-}
-
-button {
-    cursor: pointer;
-}
-
-#answers {
-    margin: 20px;
-}
-
-.answer-button {
-    width: 80px;
-    height: 40px;
-    font-size: 20px;
-    margin: 5px;
-}
-
-#results {
-    width: 80%;
-    margin: 20px auto;
-    border-collapse: collapse;
-}
-
-#results th, #results td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-#results th {
+    margin: 0;
     background-color: #f4f4f4;
 }
 
-#results tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+.section {
+    text-align: center;
+}
+
+input[type="text"] {
+    width: 300px; /* Lebar input yang lebih pendek */
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input[type="text"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.start-button, .retry-button {
+    background-color: #2196F3; /* Biru */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.start-button:hover, .retry-button:hover {
+    background-color: #1976D2; /* Biru lebih gelap */
+}
+
+.answer-button {
+    background-color: #ffffff;
+    color: black;
+    border: 2px solid #4CAF50;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.answer-button:hover {
+    background-color: #f1f1f1;
+}
+
+.next-button {
+    background-color: #FFEB3B; /* Kuning */
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px; /* Jarak di atas tombol "Selesaikan sekarang" */
+}
+
+.next-button:hover {
+    background-color: #FBC02D; /* Kuning lebih gelap */
+}
+
+.finish-button {
+    background-color: #F44336; /* Merah */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.finish-button:hover {
+    background-color: #C62828; /* Merah lebih gelap */
+}
+
+.warning {
+    color: red;
+    font-size: 12px;
+}
+
+#resultsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#resultsTable th, #resultsTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#resultsTable th {
+    background-color: #f2f2f2;
+    text-align: left;
 }
