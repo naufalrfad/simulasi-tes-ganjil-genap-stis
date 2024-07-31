@@ -63,6 +63,8 @@ button {
     font-size: 14px;
     color: red;
     margin-top: 10px;
+    text-align: right; /* Rata kanan */
+    margin-right: 20px;
 }
 
 #start-button {
