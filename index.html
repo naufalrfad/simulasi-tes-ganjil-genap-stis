@@ -4,21 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIMULASI TES GANJIL GENAP STIS</title>
-    <style>
-        /* Tambahkan style di sini */
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="container">
+    <div class="container">
         <h1>SIMULASI TES GANJIL GENAP STIS</h1>
-        <div id="segment-container"></div>
-        <div id="question-container"></div>
-        <input type="text" id="answer" placeholder="Jawab dengan 0 atau 1">
-        <button id="next-question" onclick="checkAnswer()">Next</button>
-        <div id="result"></div>
+        <div id="start-screen">
+            <label for="name">Nama Lengkap:</label>
+            <input type="text" id="name" required>
+            <button id="start-button">Mulai Tes</button>
+        </div>
+        <div id="test-screen" class="hidden">
+            <div id="timer">60</div>
+            <div id="segment">Bagian 1</div>
+            <div id="question"></div>
+            <div id="options">
+                <button class="option-button" data-value="0">0</button>
+                <button class="option-button" data-value="1">1</button>
+            </div>
+        </div>
+        <div id="result-screen" class="hidden">
+            <h2 id="result-name"></h2>
+            <canvas id="result-chart"></canvas>
+            <button id="retry-button">Coba lagi</button>
+        </div>
     </div>
-    <script>
-        // Tambahkan JavaScript di sini
-    </script>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
