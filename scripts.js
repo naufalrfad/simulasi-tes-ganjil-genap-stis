@@ -5,7 +5,7 @@ let incorrectAnswers = [];
 let timer;
 let name;
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('start-button').addEventListener('click', startTest);
     document.getElementById('retry-button').addEventListener('click', retry);
 
