@@ -87,8 +87,10 @@ button {
 
 #results-container {
     width: 100%;
-    max-width: 1000px; /* Limit width for the container */
-    overflow-x: auto; /* Allow horizontal scrolling if necessary */
+    max-width: 1000px; /* Max width to prevent overflow */
+    overflow-x: auto; /* Allow horizontal scrolling if needed */
+    padding: 10px; /* Add some padding */
+    box-sizing: border-box;
 }
 
 #results-table {
