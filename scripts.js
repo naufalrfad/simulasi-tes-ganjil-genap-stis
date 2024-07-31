@@ -1,140 +1,109 @@
-document.getElementById('start-button').addEventListener('click', function() {
-    const name = document.getElementById('name').value;
-    if (name) {
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('test-screen').style.display = 'block';
-        startTest(name);
-    } else {
-        alert('Masukkan nama lengkap!');
-    }
-});
-
-let testData = [];
-let currentSegment = 1;
-const maxSegments = 15;
-let segmentData = {};
+let currentSection = 1;
 let timerInterval;
-let timeLeft = 60;
+let totalSections = 15;
+let answers = []; // Array to store answers for each section
 
-function startTest(name) {
-    if (!segmentData[currentSegment]) {
-        segmentData[currentSegment] = { correct: 0, incorrect: 0 };
-    }
-    testData = Array.from({ length: 100 }, generateQuestion); // 100 questions per segment
-    displayQuestion();
-    startTimer();
+document.getElementById('start-test').addEventListener('click', startTest);
+document.getElementById('next-section').addEventListener('click', nextSection);
+document.getElementById('finish-test').addEventListener('click', finishTest);
+document.getElementById('retry-test').addEventListener('click', retryTest);
+
+function startTest() {
+    document.getElementById('start-screen').classList.add('hidden');
+    document.getElementById('test-screen').classList.remove('hidden');
+    startSection(currentSection);
 }
 
-function generateQuestion() {
-    const num1 = Math.floor(Math.random() * 10);
-    const num2 = Math.floor(Math.random() * 10);
-    const isEven = (num1 + num2) % 2 === 0;
-    return {
-        question: `${num1} + ${num2}`,
-        answer: isEven ? 0 : 1
-    };
-}
+function startSection(section) {
+    document.getElementById('next-section').classList.add('hidden');
+    document.getElementById('finish-test').classList.add('hidden');
+    document.getElementById('timer').textContent = 'Sisa waktu: 60 detik';
 
-function displayQuestion() {
-    if (testData.length > 0) {
-        const currentQuestion = testData[0];
-        document.getElementById('question').innerText = currentQuestion.question;
-    }
-}
-
-function answer(answer) {
-    const currentQuestion = testData[0];
-    if (currentQuestion) {
-        if (answer === currentQuestion.answer) {
-            segmentData[currentSegment].correct++;
-        } else {
-            segmentData[currentSegment].incorrect++;
-        }
-        testData.shift();
-        if (testData.length === 0) {
-            clearInterval(timerInterval);
-            nextSegment();
-        } else {
-            displayQuestion();
-        }
-    }
-}
-
-function startTimer() {
-    timeLeft = 60;
-    document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
+    // Reset the timer and disable previous timer
+    clearInterval(timerInterval);
+    let timeLeft = 60;
     timerInterval = setInterval(() => {
         timeLeft--;
-        document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
+        document.getElementById('timer').textContent = `Sisa waktu: ${timeLeft} detik`;
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            nextSegment();
+            nextSection();
         }
     }, 1000);
+
+    loadQuestion(section);
 }
 
-function nextSegment() {
-    clearInterval(timerInterval);
+function loadQuestion(section) {
+    // Example question loader
+    // Replace this with your actual question loading logic
+    document.getElementById('question').textContent = `Contoh soal ${section}`;
+    document.querySelectorAll('.answer-btn').forEach(btn => {
+        btn.addEventListener('click', handleAnswer);
+    });
+    document.addEventListener('keydown', handleKeyboardInput);
+}
 
-    // Ensure the previous timer is cleared
-    timeLeft = 60;
-    document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
+function handleAnswer(event) {
+    // Handle answer click
+    const answer = event.target.getAttribute('data-answer');
+    recordAnswer(answer);
+    nextSection();
+}
 
-    if (currentSegment < maxSegments) {
-        currentSegment++;
-        document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
-        testData = Array.from({ length: 100 }, generateQuestion); // Restart test data for the new segment
-        displayQuestion();
-        startTimer(); // Start timer for the new segment
-    } else {
-        skipTest();
+function handleKeyboardInput(event) {
+    // Handle keyboard input for answers
+    if (event.key === '0' || event.key === '1') {
+        recordAnswer(event.key);
+        nextSection();
     }
 }
 
-function skipTest() {
+function recordAnswer(answer) {
+    // Record the answer
+    answers[currentSection - 1] = answer;
+}
+
+function nextSection() {
     clearInterval(timerInterval);
-    document.getElementById('test-screen').style.display = 'none';
-    document.getElementById('result-screen').style.display = 'block';
+    if (currentSection < totalSections) {
+        currentSection++;
+        startSection(currentSection);
+    } else {
+        finishTest();
+    }
+}
+
+function finishTest() {
+    document.getElementById('test-screen').classList.add('hidden');
+    document.getElementById('result-screen').classList.remove('hidden');
     showResults();
 }
 
 function showResults() {
-    const results = [];
-    for (let i = 1; i <= maxSegments; i++) {
-        if (segmentData[i]) {
-            results.push({
-                segment: i,
-                correct: segmentData[i].correct,
-                incorrect: segmentData[i].incorrect,
-                accuracy: ((segmentData[i].correct / (segmentData[i].correct + segmentData[i].incorrect)) * 100).toFixed(1) + '%'
-            });
-        }
-    }
+    const resultTableBody = document.querySelector('#result-table tbody');
+    resultTableBody.innerHTML = ''; // Clear previous results
 
-    let resultsTable = '';
-    results.forEach(result => {
-        resultsTable += `
-            <tr>
-                <td>Bagian ${result.segment}</td>
-                <td>${result.correct}</td>
-                <td>${result.incorrect}</td>
-                <td>${result.accuracy}</td>
-            </tr>
+    for (let i = 1; i <= totalSections; i++) {
+        // Replace with actual result data
+        const correctAnswers = 0; // Placeholder
+        const wrongAnswers = 0;   // Placeholder
+        const accuracy = 0;       // Placeholder
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>Bagian ${i}</td>
+            <td>${correctAnswers}</td>
+            <td>${wrongAnswers}</td>
+            <td>${accuracy}%</td>
         `;
-    });
-
-    document.getElementById('results').querySelector('tbody').innerHTML = resultsTable;
-    document.getElementById('name-display').innerText = `Nama: ${document.getElementById('name').value}`;
+        resultTableBody.appendChild(row);
+    }
 }
 
-// Handle keyboard input
-document.addEventListener('keydown', function(event) {
-    if (document.getElementById('test-screen').style.display !== 'none') {
-        const key = event.key;
-        if (key === '0') {
-            answer(0);
-        } else if (key === '1') {
-            answer(1);
-        }
-    }
-});
+function retryTest() {
+    document.getElementById('result-screen').classList.add('hidden');
+    document.getElementById('start-screen').classList.remove('hidden');
+    currentSection = 1;
+    clearInterval(timerInterval);
+    answers = []; // Clear answers
+}
