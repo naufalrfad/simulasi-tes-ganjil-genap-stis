@@ -1,5 +1,5 @@
 document.getElementById('start-button').addEventListener('click', function() {
-    var name = document.getElementById('name').value;
+    const name = document.getElementById('name').value;
     if (name) {
         document.getElementById('start-screen').style.display = 'none';
         document.getElementById('test-screen').style.display = 'block';
@@ -11,17 +11,16 @@ document.getElementById('start-button').addEventListener('click', function() {
 
 let testData = [];
 let currentSegment = 1;
-let maxSegments = 15;
-let segmentData = [];
+const maxSegments = 15;
+let segmentData = {};
 let timerInterval;
 let timeLeft = 60;
 
 function startTest(name) {
-    segmentData = {
-        correct: 0,
-        incorrect: 0
-    };
-    testData = Array.from({ length: 10 }, (_, i) => generateQuestion());
+    if (!segmentData[currentSegment]) {
+        segmentData[currentSegment] = { correct: 0, incorrect: 0 };
+    }
+    testData = Array.from({ length: 10 }, generateQuestion);
     displayQuestion();
     startTimer();
 }
@@ -47,9 +46,9 @@ function answer(answer) {
     const currentQuestion = testData[0];
     if (currentQuestion) {
         if (answer === currentQuestion.answer) {
-            segmentData.correct++;
+            segmentData[currentSegment].correct++;
         } else {
-            segmentData.incorrect++;
+            segmentData[currentSegment].incorrect++;
         }
         testData.shift();
         if (testData.length === 0) {
@@ -75,18 +74,23 @@ function startTimer() {
 }
 
 function nextSegment() {
-    document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
+    clearInterval(timerInterval);
+    timeLeft = 60;
+    document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
+
     if (currentSegment < maxSegments) {
         currentSegment++;
+        document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
         document.getElementById('test-screen').style.display = 'none';
         document.getElementById('test-screen').style.display = 'block';
-        startTest();
+        startTest(); // Restart test data for the new segment
     } else {
         skipTest();
     }
 }
 
 function skipTest() {
+    clearInterval(timerInterval);
     document.getElementById('test-screen').style.display = 'none';
     document.getElementById('result-screen').style.display = 'block';
     showResults();
@@ -95,14 +99,16 @@ function skipTest() {
 function showResults() {
     const results = [];
     for (let i = 1; i <= maxSegments; i++) {
-        results.push({
-            segment: i,
-            correct: segmentData.correct,
-            incorrect: segmentData.incorrect,
-            accuracy: ((segmentData.correct / (segmentData.correct + segmentData.incorrect)) * 100).toFixed(1) + '%'
-        });
+        if (segmentData[i]) {
+            results.push({
+                segment: i,
+                correct: segmentData[i].correct,
+                incorrect: segmentData[i].incorrect,
+                accuracy: ((segmentData[i].correct / (segmentData[i].correct + segmentData[i].incorrect)) * 100).toFixed(1) + '%'
+            });
+        }
     }
-    
+
     let resultsTable = '';
     results.forEach(result => {
         resultsTable += `
@@ -116,13 +122,4 @@ function showResults() {
     });
 
     document.getElementById('results').innerHTML = resultsTable;
-    document.getElementById('name-display').innerText = `Nama: ${document.getElementById('name').value}`;
-}
-
-function retryTest() {
-    document.getElementById('result-screen').style.display = 'none';
-    document.getElementById('start-screen').style.display = 'block';
-}
-
-// Add event listener for keyboard input
-document
+    document.getElementById('name
