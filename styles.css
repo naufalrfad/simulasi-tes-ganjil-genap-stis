@@ -1,74 +1,117 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const startButton = document.getElementById('start');
+    const testSection = document.getElementById('test-section');
+    const introSection = document.getElementById('intro');
+    const resultSection = document.getElementById('result-section');
+    const nameInput = document.getElementById('name');
+    const timerDisplay = document.getElementById('timer');
+    const questionDisplay = document.getElementById('question');
+    const segmentTitle = document.getElementById('segment-title');
+    const options = document.querySelectorAll('.option');
+    const skipButton = document.getElementById('skip');
+    const nextButton = document.getElementById('next');
+    const retryButton = document.getElementById('retry');
+    const resultNameDisplay = document.getElementById('result-name');
+    const resultTableBody = document.querySelector('#result-table tbody');
 
-#main-container {
-    text-align: center;
-}
+    let currentSegment = 1;
+    let timer;
+    let questionsAnswered = 0;
+    let correctAnswers = 0;
+    let results = [];
 
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+    function startTest() {
+        introSection.classList.add('hidden');
+        testSection.classList.remove('hidden');
+        startSegment();
+    }
 
-#start-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    function startSegment() {
+        segmentTitle.textContent = `Bagian ${currentSegment}`;
+        questionsAnswered = 0;
+        correctAnswers = 0;
+        startTimer();
+        generateQuestion();
+    }
 
-#test-screen {
-    margin-top: 20px;
-}
+    function startTimer() {
+        let timeLeft = 60;
+        timerDisplay.textContent = `Sisa waktu: ${timeLeft} detik`;
+        timer = setInterval(() => {
+            timeLeft--;
+            timerDisplay.textContent = `Sisa waktu: ${timeLeft} detik`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                endSegment();
+            }
+        }, 1000);
+    }
 
-#timer {
-    font-size: 1.2em;
-    margin-bottom: 20px;
-}
+    function generateQuestion() {
+        const num1 = Math.floor(Math.random() * 10);
+        const num2 = Math.floor(Math.random() * 10);
+        const answer = (num1 + num2) % 2 === 0 ? 0 : 1;
+        questionDisplay.textContent = `${num1} + ${num2} = ?`;
 
-#question-container {
-    margin-bottom: 20px;
-}
+        options.forEach(option => {
+            option.onclick = () => {
+                checkAnswer(parseInt(option.getAttribute('data-value')), answer);
+            };
+        });
 
-.answer-btn {
-    padding: 10px;
-    font-size: 1.2em;
-    margin: 5px;
-    border-radius: 5px;
-}
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '0' || e.key === '1') {
+                checkAnswer(parseInt(e.key), answer);
+            }
+        });
+    }
 
-#skip-section {
-    background-color: red;
-    color: white;
-}
+    function checkAnswer(selectedAnswer, correctAnswer) {
+        if (selectedAnswer === correctAnswer) {
+            correctAnswers++;
+        }
+        questionsAnswered++;
+        generateQuestion();
+    }
 
-#next-section {
-    background-color: yellow;
-    color: black;
-}
+    function endSegment() {
+        results.push({ segment: currentSegment, correct: correctAnswers, total: questionsAnswered });
+        if (currentSegment < 15) {
+            currentSegment++;
+            testSection.classList.add('hidden');
+            nextButton.onclick = () => {
+                testSection.classList.remove('hidden');
+                startSegment();
+            };
+        } else {
+            showResults();
+        }
+    }
 
-#result-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    function showResults() {
+        resultNameDisplay.textContent = nameInput.value;
+        results.forEach(result => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${result.segment}</td>
+                <td>${result.correct}</td>
+                <td>${result.total - result.correct}</td>
+            `;
+            resultTableBody.appendChild(row);
+        });
+        testSection.classList.add('hidden');
+        resultSection.classList.remove('hidden');
+    }
 
-#result-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
+    function retryTest() {
+        resultSection.classList.add('hidden');
+        introSection.classList.remove('hidden');
+        nameInput.value = '';
+        currentSegment = 1;
+        results = [];
+    }
 
-#result-table th, #result-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
+    startButton.addEventListener('click', startTest);
+    skipButton.addEventListener('click', showResults);
+    retryButton.addEventListener('click', retryTest);
+});
