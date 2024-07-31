@@ -78,12 +78,17 @@ function nextSegment() {
     timeLeft = 60;
     document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
 
+    // Clear timerInterval for the previous segment
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+
     if (currentSegment < maxSegments) {
         currentSegment++;
         document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
-        document.getElementById('test-screen').style.display = 'none';
-        document.getElementById('test-screen').style.display = 'block';
-        startTest(); // Restart test data for the new segment
+        testData = Array.from({ length: 10 }, generateQuestion); // Restart test data for the new segment
+        displayQuestion();
+        startTimer(); // Start timer for the new segment
     } else {
         skipTest();
     }
@@ -122,4 +127,17 @@ function showResults() {
     });
 
     document.getElementById('results').innerHTML = resultsTable;
-    document.getElementById('name
+    document.getElementById('name-display').innerText = `Nama: ${document.getElementById('name').value}`;
+}
+
+// Handle keyboard input
+document.addEventListener('keydown', function(event) {
+    if (document.getElementById('test-screen').style.display !== 'none') {
+        const key = event.key;
+        if (key === '0') {
+            answer(0);
+        } else if (key === '1') {
+            answer(1);
+        }
+    }
+});
