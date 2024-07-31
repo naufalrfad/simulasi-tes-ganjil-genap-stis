@@ -20,7 +20,7 @@ function startTest(name) {
     if (!segmentData[currentSegment]) {
         segmentData[currentSegment] = { correct: 0, incorrect: 0 };
     }
-    testData = Array.from({ length: 10 }, generateQuestion);
+    testData = Array.from({ length: 100 }, generateQuestion); // 100 questions per segment
     displayQuestion();
     startTimer();
 }
@@ -75,18 +75,14 @@ function startTimer() {
 
 function nextSegment() {
     clearInterval(timerInterval);
-    timeLeft = 60;
-    document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
 
-    // Clear timerInterval for the previous segment
-    if (timerInterval) {
-        clearInterval(timerInterval);
-    }
+    // Ensure the previous timer is cleared
+    document.getElementById('timer').innerText = `Sisa waktu: 60 detik`;
 
     if (currentSegment < maxSegments) {
         currentSegment++;
         document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
-        testData = Array.from({ length: 10 }, generateQuestion); // Restart test data for the new segment
+        testData = Array.from({ length: 100 }, generateQuestion); // Restart test data for the new segment
         displayQuestion();
         startTimer(); // Start timer for the new segment
     } else {
@@ -126,7 +122,7 @@ function showResults() {
         `;
     });
 
-    document.getElementById('results').innerHTML = resultsTable;
+    document.getElementById('results').querySelector('tbody').innerHTML = resultsTable;
     document.getElementById('name-display').innerText = `Nama: ${document.getElementById('name').value}`;
 }
 
