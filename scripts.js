@@ -1,7 +1,7 @@
 let currentSection = 1;
+const totalSections = 5; // Adjust if needed
+const sectionData = {}; // To store answers and scores per section
 let timerInterval;
-let totalSections = 15;
-let answers = []; // Array to store answers for each section
 
 document.getElementById('start-test').addEventListener('click', startTest);
 document.getElementById('next-section').addEventListener('click', nextSection);
@@ -19,7 +19,7 @@ function startSection(section) {
     document.getElementById('finish-test').classList.add('hidden');
     document.getElementById('timer').textContent = 'Sisa waktu: 60 detik';
 
-    // Reset the timer and disable previous timer
+    // Reset the timer
     clearInterval(timerInterval);
     let timeLeft = 60;
     timerInterval = setInterval(() => {
@@ -31,6 +31,13 @@ function startSection(section) {
         }
     }, 1000);
 
+    // Initialize section data
+    sectionData[section] = {
+        correct: 0,
+        wrong: 0,
+        total: 0
+    };
+
     loadQuestion(section);
 }
 
@@ -39,6 +46,7 @@ function loadQuestion(section) {
     // Replace this with your actual question loading logic
     document.getElementById('question').textContent = `Contoh soal ${section}`;
     document.querySelectorAll('.answer-btn').forEach(btn => {
+        btn.removeEventListener('click', handleAnswer);
         btn.addEventListener('click', handleAnswer);
     });
     document.addEventListener('keydown', handleKeyboardInput);
@@ -61,7 +69,20 @@ function handleKeyboardInput(event) {
 
 function recordAnswer(answer) {
     // Record the answer
-    answers[currentSection - 1] = answer;
+    if (!sectionData[currentSection]) {
+        sectionData[currentSection] = {
+            correct: 0,
+            wrong: 0,
+            total: 0
+        };
+    }
+    sectionData[currentSection].total++;
+    // Example scoring logic
+    if (answer === '0') {
+        sectionData[currentSection].correct++;
+    } else {
+        sectionData[currentSection].wrong++;
+    }
 }
 
 function nextSection() {
@@ -85,10 +106,11 @@ function showResults() {
     resultTableBody.innerHTML = ''; // Clear previous results
 
     for (let i = 1; i <= totalSections; i++) {
-        // Replace with actual result data
-        const correctAnswers = 0; // Placeholder
-        const wrongAnswers = 0;   // Placeholder
-        const accuracy = 0;       // Placeholder
+        const section = sectionData[i] || { correct: 0, wrong: 0, total: 0 };
+        const correctAnswers = section.correct;
+        const wrongAnswers = section.wrong;
+        const accuracy = totalSections > 0 ? ((correctAnswers / section.total) * 100).toFixed(2) : 0;
+
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>Bagian ${i}</td>
@@ -105,5 +127,4 @@ function retryTest() {
     document.getElementById('start-screen').classList.remove('hidden');
     currentSection = 1;
     clearInterval(timerInterval);
-    answers = []; // Clear answers
 }
