@@ -1,4 +1,3 @@
-// Initialize test
 document.getElementById('start-button').addEventListener('click', function() {
     var name = document.getElementById('name').value;
     if (name) {
@@ -13,17 +12,17 @@ document.getElementById('start-button').addEventListener('click', function() {
 let testData = [];
 let currentSegment = 1;
 let maxSegments = 15;
-let segmentData = {
-    correct: 0,
-    incorrect: 0
-};
+let segmentData = [];
+let timerInterval;
+let timeLeft = 60;
 
 function startTest(name) {
-    // Initialize variables for the test
-    segmentData = { correct: 0, incorrect: 0 };
-    testData = Array.from({ length: 100 }, (_, i) => generateQuestion());
+    segmentData = {
+        correct: 0,
+        incorrect: 0
+    };
+    testData = Array.from({ length: 10 }, (_, i) => generateQuestion());
     displayQuestion();
-    // Start timer
     startTimer();
 }
 
@@ -53,30 +52,34 @@ function answer(answer) {
             segmentData.incorrect++;
         }
         testData.shift();
-        displayQuestion();
+        if (testData.length === 0) {
+            clearInterval(timerInterval);
+            nextSegment();
+        } else {
+            displayQuestion();
+        }
     }
 }
 
 function startTimer() {
-    let timeLeft = 60;
-    const timerElement = document.getElementById('timer');
-    const interval = setInterval(() => {
+    timeLeft = 60;
+    document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
+    timerInterval = setInterval(() => {
         timeLeft--;
-        timerElement.innerText = `Sisa waktu: ${timeLeft} detik`;
+        document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
         if (timeLeft <= 0) {
-            clearInterval(interval);
+            clearInterval(timerInterval);
             nextSegment();
         }
     }, 1000);
 }
 
 function nextSegment() {
+    document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
     if (currentSegment < maxSegments) {
         currentSegment++;
-        document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
         document.getElementById('test-screen').style.display = 'none';
         document.getElementById('test-screen').style.display = 'block';
-        // Restart test for new segment
         startTest();
     } else {
         skipTest();
@@ -120,3 +123,6 @@ function retryTest() {
     document.getElementById('result-screen').style.display = 'none';
     document.getElementById('start-screen').style.display = 'block';
 }
+
+// Add event listener for keyboard input
+document
