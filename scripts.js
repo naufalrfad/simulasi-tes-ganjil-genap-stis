@@ -134,11 +134,4 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${section.incorrect}</td>
                 <td>${((section.correct / section.total) * 100).toFixed(2)}%</td>
             `;
-            resultsTableBody.appendChild(row);
-        });
-    };
-
-    // Event listeners
-    startButton.addEventListener('click', startTest);
-    retryButton.addEventListener('click', () => location.reload());
-});
+            resultsTableBody
