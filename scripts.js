@@ -77,7 +77,8 @@ function nextSegment() {
     clearInterval(timerInterval);
 
     // Ensure the previous timer is cleared
-    document.getElementById('timer').innerText = `Sisa waktu: 60 detik`;
+    timeLeft = 60;
+    document.getElementById('timer').innerText = `Sisa waktu: ${timeLeft} detik`;
 
     if (currentSegment < maxSegments) {
         currentSegment++;
