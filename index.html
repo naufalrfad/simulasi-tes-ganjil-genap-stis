@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMULASI TES GANJIL GENAP STIS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="intro">
+            <h1>SIMULASI TES GANJIL GENAP STIS</h1>
+            <input type="text" id="name" placeholder="Nama Lengkap">
+            <button id="start">Mulai Tes</button>
+        </div>
+
+        <div id="test-section" class="hidden">
+            <div id="timer">Sisa waktu: 60 detik</div>
+            <div id="segment-title">Bagian 1</div>
+            <div id="question"></div>
+            <div class="options">
+                <button class="option" data-value="0">0</button>
+                <button class="option" data-value="1">1</button>
+            </div>
+            <button id="skip" class="red-button">Selesaikan Sekarang</button>
+            <button id="next" class="yellow-button">Lanjut ke Bagian Berikutnya</button>
+        </div>
+
+        <div id="result-section" class="hidden">
+            <h2>Hasil Tes</h2>
+            <p>Nama: <span id="result-name"></span></p>
+            <table id="result-table">
+                <thead>
+                    <tr>
+                        <th>Bagian</th>
+                        <th>Benar</th>
+                        <th>Salah</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="retry">Coba Lagi</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
