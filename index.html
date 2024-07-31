@@ -1,36 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIMULASI TES GANJIL GENAP STIS</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Tes Ganjil-Genap</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="start-screen" class="screen">
-        <h1>SIMULASI TES GANJIL GENAP STIS</h1>
-        <input type="text" id="fullName" placeholder="Nama Lengkap">
-        <button id="startButton">Mulai Tes</button>
+    <!-- Halaman Awal -->
+    <div id="startSection" class="section">
+        <h1>Tes Ganjil-Genap</h1>
+        <input type="text" id="fullName" placeholder="Nama Lengkap" autofocus>
+        <button id="startTest" class="start-button">Mulai Tes</button>
     </div>
 
-    <div id="test-screen" class="screen" style="display:none;">
-        <div class="header">
-            <span id="segment"></span>
-            <span id="timer">Sisa waktu: 60 detik</span>
-        </div>
-        <div id="question">Soal akan muncul di sini</div>
-        <div id="answers">
-            <button class="answer-button" data-answer="0">0</button>
-            <button class="answer-button" data-answer="1">1</button>
-        </div>
-        <button id="next-section" style="display:none;">Lanjut ke bagian selanjutnya</button>
-        <button id="finish-early" style="display:none;">Selesaikan lebih dulu</button>
+    <!-- Halaman Tes -->
+    <div id="testSection" class="section" style="display: none;">
+        <h1>Tes Ganjil-Genap</h1>
+        <div id="section"></div>
+        <div id="question"></div>
+        <button id="answer0" class="answer-button">0</button>
+        <button id="answer1" class="answer-button">1</button>
+        <button id="nextSectionButton" class="next-button">Ke bagian berikutnya</button>
+        <button id="finishEarly" class="finish-button">Selesaikan sekarang</button>
+        <p id="warning" class="warning">Peringatan, jangan klik sebelum ada instruksi</p>
+        <div id="timer">Sisa waktu: 60 detik</div>
     </div>
 
-    <div id="result-screen" class="screen" style="display:none;">
+    <!-- Halaman Hasil -->
+    <div id="resultsSection" class="section" style="display: none;">
+        <h1>Tes Ganjil-Genap</h1>
         <h2>Hasil Tes</h2>
-        <div id="name-display"></div>
-        <table id="results">
+        <table id="resultsTable">
             <thead>
                 <tr>
                     <th>Bagian</th>
@@ -41,9 +42,10 @@
             </thead>
             <tbody></tbody>
         </table>
-        <button id="retryButton">Coba lagi</button>
+        <button id="retryButton" class="retry-button">Coba Lagi</button>
+        <p>Hasil anda tidak akan tersimpan, harap melakukan screenshot sebelum klik coba lagi.</p>
     </div>
 
-    <script src="scripts.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
