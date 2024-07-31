@@ -106,11 +106,12 @@ function showResults() {
         const accuracy = total === 0 ? 0 : (correct / total * 100).toFixed(2);
 
         results.innerHTML += `
-            <p>Bagian ${i}</p>
-            <p>Benar: ${correct}</p>
-            <p>Salah: ${incorrect}</p>
-            <p>Akurasi: ${accuracy}%</p>
-            <hr>
+            <tr>
+                <td>Bagian ${i}</td>
+                <td>${correct}</td>
+                <td>${incorrect}</td>
+                <td>${accuracy}%</td>
+            </tr>
         `;
     }
 }
