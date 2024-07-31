@@ -56,11 +56,16 @@ button {
 
 #skip-button {
     position: absolute;
-    bottom: 10px;
+    bottom: 40px;
     right: 10px;
 }
 
 #warning {
     font-size: 14px;
     color: red;
+    margin-top: 10px;
+}
+
+#start-button {
+    margin-top: 10px;
 }
