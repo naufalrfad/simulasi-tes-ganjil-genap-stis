@@ -7,29 +7,29 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <div id="start-screen">
         <h1>SIMULASI TES GANJIL GENAP STIS</h1>
-        <div id="start-screen">
-            <label for="name">Nama Lengkap:</label>
-            <input type="text" id="name" required>
-            <button id="start-button">Mulai Tes</button>
-        </div>
-        <div id="test-screen" class="hidden">
-            <div id="timer">60</div>
-            <div id="segment">Bagian 1</div>
+        <label for="name">Nama Lengkap:</label>
+        <input type="text" id="name">
+        <button id="start-button">Mulai Tes</button>
+    </div>
+
+    <div id="test-screen" style="display: none;">
+        <div id="timer">1:00</div>
+        <div id="segment">Bagian 1</div>
+        <div id="question-container">
             <div id="question"></div>
-            <div id="options">
-                <button class="option-button" data-value="0">0</button>
-                <button class="option-button" data-value="1">1</button>
-            </div>
-        </div>
-        <div id="result-screen" class="hidden">
-            <h2 id="result-name"></h2>
-            <canvas id="result-chart"></canvas>
-            <button id="retry-button">Coba lagi</button>
+            <button class="answer-button" data-answer="0">0</button>
+            <button class="answer-button" data-answer="1">1</button>
         </div>
     </div>
-    <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <div id="result-screen" style="display: none;">
+        <h1>Hasil Tes</h1>
+        <canvas id="result-chart"></canvas>
+        <button id="retry-button">Coba Lagi</button>
+    </div>
+
+    <script src="scripts.js"></script>
 </body>
 </html>
