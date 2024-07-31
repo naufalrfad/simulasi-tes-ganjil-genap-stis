@@ -21,13 +21,13 @@ body {
     padding: 10px;
 }
 
-#segment {
-    font-size: 24px;
-}
-
 #timer {
     font-size: 24px;
-    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#segment {
+    font-size: 24px;
 }
 
 #question-container {
@@ -54,14 +54,13 @@ button {
     padding: 10px 20px;
 }
 
-#finish-button {
+#skip-button {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: 10px;
+    right: 10px;
 }
 
 #warning {
     font-size: 14px;
     color: red;
-    margin-top: 10px;
 }
