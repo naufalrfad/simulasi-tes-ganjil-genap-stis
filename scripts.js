@@ -126,7 +126,7 @@ function showResults() {
         `;
     });
 
-    document.getElementById('results').innerHTML = resultsTable;
+    document.getElementById('results').querySelector('tbody').innerHTML = resultsTable;
     document.getElementById('name-display').innerText = `Nama: ${document.getElementById('name').value}`;
 }
 
