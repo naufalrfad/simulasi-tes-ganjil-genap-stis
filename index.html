@@ -11,7 +11,9 @@
         <h1>SIMULASI TES GANJIL GENAP STIS</h1>
         <label for="name">Nama Lengkap:</label>
         <input type="text" id="name">
-        <button id="start-button">Mulai Tes</button>
+        <div id="start-button-container">
+            <button id="start-button">Mulai Tes</button>
+        </div>
     </div>
 
     <div id="test-screen" style="display: none;">
@@ -27,6 +29,7 @@
             <button onclick="answer(1)">1</button>
         </div>
         <button id="skip-button" onclick="skipTest()">Selesaikan lebih dulu</button>
+        <button id="next-segment-button" onclick="nextSegment()">Lanjut ke bagian selanjutnya</button>
         <p id="warning">Peringatan: jangan klik sebelum ada instruksi</p>
     </div>
 
