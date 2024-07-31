@@ -5,6 +5,19 @@ let incorrectAnswers = [];
 let timer;
 let name;
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('start-button').addEventListener('click', startTest);
+    document.getElementById('retry-button').addEventListener('click', retry);
+
+    document.addEventListener('keydown', (event) => {
+        if (document.getElementById('test-screen').style.display === 'block') {
+            if (event.key === '0' || event.key === '1') {
+                answer(parseInt(event.key));
+            }
+        }
+    });
+});
+
 function startTest() {
     name = document.getElementById('name').value;
     if (name === "") {
@@ -120,11 +133,3 @@ function retry() {
     document.getElementById('result-screen').style.display = 'none';
     document.getElementById('start-screen').style.display = 'block';
 }
-
-document.addEventListener('keydown', (event) => {
-    if (document.getElementById('test-screen').style.display === 'block') {
-        if (event.key === '0' || event.key === '1') {
-            answer(parseInt(event.key));
-        }
-    }
-});
