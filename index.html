@@ -33,7 +33,17 @@
     <div id="result-screen" style="display: none;">
         <h2>Hasil Tes</h2>
         <p id="name-display"></p>
-        <div id="results"></div>
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th>Bagian</th>
+                    <th>Benar</th>
+                    <th>Salah</th>
+                    <th>Akurasi</th>
+                </tr>
+            </thead>
+            <tbody id="results"></tbody>
+        </table>
         <button id="retry-button">Coba Lagi</button>
     </div>
 
