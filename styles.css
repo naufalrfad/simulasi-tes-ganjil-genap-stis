@@ -15,6 +15,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 #start-screen,
@@ -24,13 +25,13 @@ body {
     max-width: 600px;
 }
 
-#test-screen,
-#result-screen {
-    position: relative;
-}
-
 .hidden {
     display: none;
+}
+
+#test-screen {
+    position: relative;
+    margin-top: 50px; /* Distance from top */
 }
 
 #test-header {
@@ -47,12 +48,19 @@ body {
 #question-container {
     margin: 20px 0;
     font-size: 24px;
+    text-align: center;
+}
+
+#answer-buttons {
+    margin: 20px 0;
 }
 
 #answer-buttons button {
-    font-size: 18px;
-    margin: 5px;
-    padding: 10px 20px;
+    font-size: 24px;
+    width: 80px;
+    height: 50px;
+    margin: 10px;
+    padding: 10px;
     cursor: pointer;
 }
 
