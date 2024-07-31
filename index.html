@@ -11,7 +11,7 @@
         <h1>SIMULASI TES GANJIL GENAP STIS</h1>
         <label for="name">Nama Lengkap:</label>
         <input type="text" id="name">
-        <button onclick="startTest()">Mulai Tes</button>
+        <button id="start-button">Mulai Tes</button>
     </div>
 
     <div id="test-screen" style="display: none;">
@@ -31,7 +31,7 @@
     <div id="result-screen" style="display: none;">
         <h2>Hasil Tes</h2>
         <canvas id="resultChart"></canvas>
-        <button onclick="retry()">Coba Lagi</button>
+        <button id="retry-button">Coba Lagi</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
