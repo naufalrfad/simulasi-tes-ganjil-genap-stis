@@ -1,125 +1,122 @@
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+// Initialize test
+document.getElementById('start-button').addEventListener('click', function() {
+    var name = document.getElementById('name').value;
+    if (name) {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('test-screen').style.display = 'block';
+        startTest(name);
+    } else {
+        alert('Masukkan nama lengkap!');
+    }
+});
+
+let testData = [];
+let currentSegment = 1;
+let maxSegments = 15;
+let segmentData = {
+    correct: 0,
+    incorrect: 0
+};
+
+function startTest(name) {
+    // Initialize variables for the test
+    segmentData = { correct: 0, incorrect: 0 };
+    testData = Array.from({ length: 100 }, (_, i) => generateQuestion());
+    displayQuestion();
+    // Start timer
+    startTimer();
 }
 
-#start-screen, #test-screen, #result-screen {
-    text-align: center;
-    width: 100%;
-    max-width: 1200px; /* Ensure a maximum width for readability */
+function generateQuestion() {
+    const num1 = Math.floor(Math.random() * 10);
+    const num2 = Math.floor(Math.random() * 10);
+    const isEven = (num1 + num2) % 2 === 0;
+    return {
+        question: `${num1} + ${num2}`,
+        answer: isEven ? 0 : 1
+    };
 }
 
-#start-button-container {
-    margin-top: 10px;
-    text-align: center;
+function displayQuestion() {
+    if (testData.length > 0) {
+        const currentQuestion = testData[0];
+        document.getElementById('question').innerText = currentQuestion.question;
+    }
 }
 
-#start-button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 24px;
-    cursor: pointer;
+function answer(answer) {
+    const currentQuestion = testData[0];
+    if (currentQuestion) {
+        if (answer === currentQuestion.answer) {
+            segmentData.correct++;
+        } else {
+            segmentData.incorrect++;
+        }
+        testData.shift();
+        displayQuestion();
+    }
 }
 
-#header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
+function startTimer() {
+    let timeLeft = 60;
+    const timerElement = document.getElementById('timer');
+    const interval = setInterval(() => {
+        timeLeft--;
+        timerElement.innerText = `Sisa waktu: ${timeLeft} detik`;
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            nextSegment();
+        }
+    }, 1000);
 }
 
-#timer {
-    font-size: 24px;
-    margin-top: 10px;
+function nextSegment() {
+    if (currentSegment < maxSegments) {
+        currentSegment++;
+        document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
+        document.getElementById('test-screen').style.display = 'none';
+        document.getElementById('test-screen').style.display = 'block';
+        // Restart test for new segment
+        startTest();
+    } else {
+        skipTest();
+    }
 }
 
-#segment {
-    font-size: 24px;
+function skipTest() {
+    document.getElementById('test-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    showResults();
 }
 
-#question-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 60vh;
-    margin-bottom: 20px;
+function showResults() {
+    const results = [];
+    for (let i = 1; i <= maxSegments; i++) {
+        results.push({
+            segment: i,
+            correct: segmentData.correct,
+            incorrect: segmentData.incorrect,
+            accuracy: ((segmentData.correct / (segmentData.correct + segmentData.incorrect)) * 100).toFixed(1) + '%'
+        });
+    }
+    
+    let resultsTable = '';
+    results.forEach(result => {
+        resultsTable += `
+            <tr>
+                <td>Bagian ${result.segment}</td>
+                <td>${result.correct}</td>
+                <td>${result.incorrect}</td>
+                <td>${result.accuracy}</td>
+            </tr>
+        `;
+    });
+
+    document.getElementById('results').innerHTML = resultsTable;
+    document.getElementById('name-display').innerText = `Nama: ${document.getElementById('name').value}`;
 }
 
-#question {
-    font-size: 32px;
-}
-
-#answers {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-button {
-    font-size: 24px;
-    padding: 10px 20px;
-}
-
-#skip-button, #next-segment-button {
-    margin-top: 20px;
-}
-
-#warning {
-    font-size: 14px;
-    color: red;
-    margin-top: 10px;
-    text-align: right;
-    margin-right: 20px;
-}
-
-#result-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-#results-container {
-    width: 100%;
-    max-width: 1000px; /* Max width to prevent overflow */
-    overflow-x: auto; /* Allow horizontal scrolling if needed */
-    padding: 10px; /* Add some padding */
-    box-sizing: border-box;
-}
-
-#results-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 20px;
-}
-
-#results-table th, #results-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: center;
-    box-sizing: border-box;
-}
-
-#results-table th {
-    background-color: #f2f2f2;
-}
-
-#results-table td:first-child {
-    width: 250px; /* Increased width for 'Bagian' column */
-}
-
-#retry-button {
-    margin-top: 20px;
+function retryTest() {
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('start-screen').style.display = 'block';
 }
