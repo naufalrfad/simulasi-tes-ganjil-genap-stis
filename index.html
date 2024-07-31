@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMULASI TES GANJIL GENAP STIS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        #question-container {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        #answer {
+            width: 50px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        #next-question {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>SIMULASI TES GANJIL GENAP STIS</h1>
+        <div id="segment-container"></div>
+        <div id="question-container"></div>
+        <input type="text" id="answer" placeholder="Jawab dengan 0 atau 1">
+        <button id="next-question" onclick="checkAnswer()">Next</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        const segmentContainer = document.getElementById('segment-container');
+        const questionContainer = document.getElementById('question-container');
+        const answerInput = document.getElementById('answer');
+        const resultContainer = document.getElementById('result');
+        
+        let segments = [];
+        let currentSegment = 0;
+        let currentQuestion = 0;
+        const totalSegments = 80;
+        const questionsPerSegment = 100;
+        const timePerSegment = 60000; // 1 menit dalam milidetik
+
+        function generateQuestion() {
+            const num1 = Math.floor(Math.random() * 9) + 1;
+            const num2 = Math.floor(Math.random() * 9) + 1;
+            return { num1, num2 };
+        }
+
+        function generateSegments() {
+            for (let i = 0; i < totalSegments; i++) {
+                const questions = [];
+                for (let j = 0; j < questionsPerSegment; j++) {
+                    questions.push(generateQuestion());
+                }
+                segments.push({ questions, correct: 0, incorrect: 0 });
+            }
+        }
+
+        function displayQuestion() {
+            const question = segments[currentSegment].questions[currentQuestion];
+            questionContainer.textContent = `${question.num1} + ${question.num2}`;
+        }
+
+        function checkAnswer() {
+            const question = segments[currentSegment].questions[currentQuestion];
+            const userAnswer = parseInt(answerInput.value);
+            const correctAnswer = (question.num1 + question.num2) % 2 === 0 ? 0 : 1;
+
+            if (userAnswer === correctAnswer) {
+                segments[currentSegment].correct++;
+            } else {
+                segments[currentSegment].incorrect++;
+            }
+
+            answerInput.value = '';
+            currentQuestion++;
+
+            if (currentQuestion < questionsPerSegment) {
+                displayQuestion();
+            } else {
+                nextSegment();
+            }
+        }
+
+        function nextSegment() {
+            currentSegment++;
+            if (currentSegment < totalSegments) {
+                currentQuestion = 0;
+                displayQuestion();
+                setTimeout(nextSegment, timePerSegment);
+            } else {
+                displayResult();
+            }
+        }
+
+        function displayResult() {
+            questionContainer.textContent = '';
+            answerInput.style.display = 'none';
+            document.getElementById('next-question').style.display = 'none';
+
+            segments.forEach((segment, index) => {
+                const segmentResult = document.createElement('div');
+                segmentResult.textContent = `Segmen ${index + 1}: Benar: ${segment.correct}, Salah: ${segment.incorrect}`;
+                resultContainer.appendChild(segmentResult);
+            });
+        }
+
+        generateSegments();
+        displayQuestion();
+        setTimeout(nextSegment, timePerSegment);
+    </script>
+</body>
+</html>
