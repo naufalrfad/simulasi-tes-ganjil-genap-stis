@@ -36,12 +36,12 @@ function startSegment() {
     incorrectAnswers[currentSegment] = 0;
     generateQuestion();
     document.getElementById('segment').innerText = `Bagian ${currentSegment}`;
-    document.getElementById('timer').innerText = 60;
+    document.getElementById('timer').innerText = `Sisa waktu: 60 detik`;
     timer = setInterval(updateTimer, 1000);
 }
 
 function updateTimer() {
-    let time = parseInt(document.getElementById('timer').innerText);
+    let time = parseInt(document.getElementById('timer').innerText.split(' ')[2]);
     if (time === 0) {
         clearInterval(timer);
         currentSegment++;
@@ -51,7 +51,7 @@ function updateTimer() {
             startSegment();
         }
     } else {
-        document.getElementById('timer').innerText = time - 1;
+        document.getElementById('timer').innerText = `Sisa waktu: ${time - 1} detik`;
     }
 }
 
@@ -87,53 +87,29 @@ function answer(userAnswer) {
 
 function skipTest() {
     clearInterval(timer);
-    currentSegment++;
-    if (currentSegment > 15) {
-        showResults();
-    } else {
-        startSegment();
-    }
+    showResults();
 }
 
 function showResults() {
     document.getElementById('test-screen').style.display = 'none';
     document.getElementById('result-screen').style.display = 'block';
-    const ctx = document.getElementById('resultChart').getContext('2d');
-    const labels = [];
-    const dataCorrect = [];
-    const dataIncorrect = [];
+    const results = document.getElementById('results');
+    results.innerHTML = '';
 
     for (let i = 1; i <= 15; i++) {
-        labels.push(`Segmen ${i}`);
-        dataCorrect.push(correctAnswers[i] || 0);
-        dataIncorrect.push(incorrectAnswers[i] || 0);
-    }
+        const correct = correctAnswers[i] || 0;
+        const incorrect = incorrectAnswers[i] || 0;
+        const total = correct + incorrect;
+        const accuracy = total === 0 ? 0 : (correct / total * 100).toFixed(2);
 
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Benar',
-                    data: dataCorrect,
-                    backgroundColor: 'blue'
-                },
-                {
-                    label: 'Salah',
-                    data: dataIncorrect,
-                    backgroundColor: 'red'
-                }
-            ]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+        results.innerHTML += `
+            <p>Bagian ${i}</p>
+            <p>Benar: ${correct}</p>
+            <p>Salah: ${incorrect}</p>
+            <p>Akurasi: ${accuracy}%</p>
+            <hr>
+        `;
+    }
 }
 
 function retry() {
