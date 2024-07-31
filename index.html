@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,31 +7,26 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Start Screen -->
     <div id="start-screen">
         <h1>SIMULASI TES GANJIL GENAP STIS</h1>
-        <form>
-            <label for="name">Nama Lengkap:</label>
-            <input type="text" id="name" required>
-            <button type="button" id="start-button">Mulai Tes</button>
+        <form id="start-form">
+            <input type="text" id="fullName" placeholder="Nama Lengkap" required>
+            <button type="button" id="startButton">Mulai Tes</button>
         </form>
     </div>
 
-    <!-- Test Screen -->
     <div id="test-screen" style="display: none;">
-        <h2 id="segment">Bagian 1</h2>
+        <div id="segment">Bagian 1</div>
         <div id="timer">Sisa waktu: 60 detik</div>
-        <div id="question">Soal akan muncul di sini</div>
-        <button onclick="answer(0)">0</button>
-        <button onclick="answer(1)">1</button>
-        <button onclick="nextSegment()">Lanjut ke bagian selanjutnya</button>
-        <button onclick="skipTest()">Selesaikan lebih dulu</button>
+        <div id="question">1 + 6 = ?</div>
+        <button class="answer-button" data-answer="0">0</button>
+        <button class="answer-button" data-answer="1">1</button>
+        <button id="next-section" style="display: none;">Lanjut ke bagian selanjutnya</button>
+        <button id="finish-early" style="display: none;">Selesaikan lebih dulu</button>
     </div>
 
-    <!-- Result Screen -->
     <div id="result-screen" style="display: none;">
-        <h2>Hasil Tes</h2>
-        <div id="name-display">Nama: </div>
+        <div id="name-display"></div>
         <table id="results">
             <thead>
                 <tr>
@@ -42,10 +37,10 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Results will be dynamically inserted here -->
+                <!-- Hasil tes akan ditampilkan di sini -->
             </tbody>
         </table>
-        <button onclick="location.reload()">Coba lagi</button>
+        <button id="retryButton">Coba lagi</button>
     </div>
 
     <script src="scripts.js"></script>
