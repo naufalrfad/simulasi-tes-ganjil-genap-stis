@@ -5,30 +5,44 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 #start-screen, #test-screen, #result-screen {
     text-align: center;
 }
 
-#timer {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+#header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+}
+
+#timer, #segment {
     font-size: 24px;
 }
 
-#segment {
-    font-size: 24px;
+#question-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
     margin-bottom: 20px;
 }
 
 #question {
     font-size: 32px;
-    margin-bottom: 20px;
+}
+
+#answers {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
 
 button {
     font-size: 24px;
-    margin: 10px;
+    padding: 10px 20px;
 }
