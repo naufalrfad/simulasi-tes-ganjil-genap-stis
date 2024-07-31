@@ -93,9 +93,9 @@ function skipTest() {
 function showResults() {
     document.getElementById('test-screen').style.display = 'none';
     document.getElementById('result-screen').style.display = 'block';
-    
+
     document.getElementById('name-display').innerText = `Nama: ${name}`;
-    
+
     const results = document.getElementById('results');
     results.innerHTML = '';
 
