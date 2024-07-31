@@ -3,22 +3,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentQuestion = 0;
     let timer;
     const totalSections = 50;
-    const questionsPerSection = 100;
+    const questionsPerSection = 10; // Sesuaikan dengan jumlah soal per bagian
     let results = Array.from({ length: totalSections }, () => ({ correct: 0, incorrect: 0, total: 0 }));
 
     // Mengubah tampilan halaman
     function showSection(sectionId) {
         document.querySelectorAll('div.page').forEach(page => {
-            if (page.id === sectionId) {
-                page.classList.remove('hidden');
-            } else {
-                page.classList.add('hidden');
-            }
+            page.classList.toggle('hidden', page.id !== sectionId);
         });
     }
 
     // Mulai tes
     document.getElementById('start-test').addEventListener('click', () => {
+        const fullNameInput = document.getElementById('full-name');
+        if (fullNameInput.value.trim() === '') {
+            alert('Nama lengkap harus diisi.');
+            return;
+        }
         showSection('test-page');
         document.getElementById('section-number').textContent = `Bagian ${currentSection}`;
         startTimer();
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Timer
     function startTimer() {
-        let timeLeft = 60;
+        let timeLeft = 60; // Setel waktu yang sesuai
         document.getElementById('timer-count').textContent = `Sisa waktu: ${timeLeft} detik`;
         timer = setInterval(() => {
             timeLeft--;
@@ -74,8 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Memeriksa jawaban
     function checkAnswer(userAnswer) {
-        const question = generateQuestion();
-        const correctAnswer = (question.sum % 2 === 0) ? 0 : 1;
+        const correctAnswer = (generateQuestion().sum % 2 === 0) ? 0 : 1;
         if (userAnswer === correctAnswer) {
             results[currentSection - 1].correct++;
         } else {
